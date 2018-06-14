@@ -7,7 +7,8 @@ from uuid import uuid4
 import requests
 from flask import Flask, jsonify, request
 
-
+global voted
+voted = []
 class Blockchain:
     def __init__(self):
         self.current_transactions = []
@@ -136,6 +137,7 @@ class Blockchain:
             'amount': amount,
         })
 
+
         return self.last_block['index'] + 1
 
     @property
@@ -245,10 +247,12 @@ def new_transaction():
         return 'Missing values', 400
 
     # Create a new Transaction
-    index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
-
-    response = {'message': f'Transaction will be added to Block {index}'}
-    return jsonify(response), 201
+    if not values['sender'] in voted:
+        index = blockchain.new_transaction(values['sender'], values['recipient'], values['amount'])
+        voted.append(values['sender'])
+        response = {'message': f'Transaction will be added to Block {index}'}
+        return jsonify(response), 201
+    return 'You already voted', 400
 
 
 @app.route('/chain', methods=['GET'])
