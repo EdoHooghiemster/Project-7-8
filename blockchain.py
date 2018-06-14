@@ -7,8 +7,9 @@ from uuid import uuid4
 import requests
 from flask import Flask, jsonify, request
 
-global voted
+global voted, votedforcount
 voted = []
+votedforcount = []
 class Blockchain:
     def __init__(self):
         self.current_transactions = []
@@ -306,13 +307,19 @@ def VoteCount():
     for block in blockchain.chain:
         for tx in block["transactions"]:
             rc = tx["recipient"]
-            votes.append(rc)
+            sd = tx["sender"]
+            if not sd in votedforcount:
+                votes.append(rc)
+                votedforcount.append(sd)
+
 
     for x in votes:
         if x == "DonaldTrump":
             DT+=1
         if x == "MarkRutte":
             MR+=1
+
+    print(votes)
 
     Results={
         'markrutte': MR,
