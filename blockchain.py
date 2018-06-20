@@ -5,7 +5,8 @@ from urllib.parse import urlparse
 from uuid import uuid4
 
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
+
 
 global voted, votedforcount
 voted = []
@@ -238,7 +239,7 @@ def mine():
     return jsonify(response), 200
 
 
-@app.route('/transactions/new', methods=['POST'])
+@app.route('/vote', methods=['POST'])
 def new_transaction():
     values = request.get_json()
 
@@ -318,20 +319,13 @@ def VoteCount():
             DT+=1
         if x == "MarkRutte":
             MR+=1
-
     print(votes)
 
     Results={
         'markrutte': MR,
-        'donaltrump': DT
+        'donaldtrump': DT
     }
-
-
-
-    return jsonify(Results), 200
-
-
-
+    return render_template('layout.html', title='Layout', votes=Results)
 
 
 if __name__ == '__main__':
