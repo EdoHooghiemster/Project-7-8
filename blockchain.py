@@ -124,7 +124,7 @@ class Blockchain:
         self.chain.append(block)
         return block
 
-    def new_transaction(self, sender, recipient, amount):
+    def new_transaction(self, sender, recipient, amount, key):
         """
         Creates a new transaction to go into the next mined Block
 
@@ -133,14 +133,18 @@ class Blockchain:
         :param amount: Amount
         :return: The index of the Block that will hold this transaction
         """
-        self.current_transactions.append({
-            'sender': sender,
-            'recipient': recipient,
-            'amount': amount,
-        })
+        global Users
+        for x in Users:
+            if  x["public"]== sender:
+                if x["private"] ==  key:
+                    self.current_transactions.append({
+                        'sender': sender,
+                        'recipient': recipient,
+                        'amount': amount,
+                    })
+                    return self.last_block['index'] + 1
 
-
-        return self.last_block['index'] + 1
+        return 'no'
 
     @property
     def last_block(self):
@@ -195,6 +199,22 @@ class Blockchain:
         return guess_hash[:4] == "0000"
 
 
+class User:
+    global Users
+    def __init__(self, private, public):
+        self.Privatekey = private
+        self.Publickey = public
+        user = {
+            'private': self.Privatekey,
+            'public': self.Publickey
+        }
+        Users.append(user)
+
+
+
+
+
+
 # Instantiate the Node
 app = Flask(__name__)
 
@@ -202,7 +222,20 @@ app = Flask(__name__)
 node_identifier = str(uuid4()).replace('-', '')
 
 # Instantiate the Blockchain
+global Users
+Users = []
+User("1234567890", "1234567890")
+User("1234567891", "1234567891")
+User("1234567892", "1234567892")
+User("1234567893", "1234567893")
+User("1234567894", "1234567894")
+User("1234567895", "1234567895")
+User("1234567896", "1234567896")
+User("1234567897", "1234567897")
+User("1234567898", "1234567898")
+User("1234567899", "1234567899")
 blockchain = Blockchain()
+
 
 global DT, MR
 
@@ -223,6 +256,7 @@ def mine():
         sender="0",
         recipient=node_identifier,
         amount=1,
+        key=1
     )
 
     # Forge the new Block by adding it to the chain
@@ -236,7 +270,7 @@ def mine():
         'proof': block['proof'],
         'previous_hash': block['previous_hash'],
     }
-    return jsonify(response), 200
+    return HomePage()
 
 
 @app.route('/new_transaction', methods=['POST'])
@@ -244,13 +278,17 @@ def new_transaction():
 
     sender = request.form['sender']
     recipient = request.form['recipient']
+    key = request.form['key']
     amount = 5
 
     if not sender in voted:
-        index = blockchain.new_transaction(sender, recipient, amount)
-        voted.append(sender)
-        response = {'message': f'Transaction will be added to Block {index}'}
-        return jsonify(response), 201
+        index = blockchain.new_transaction(sender, recipient, amount, key)
+        if index == 'no':
+            return "You are not in the system", 400
+        else:
+            voted.append(sender)
+            response = {'message': f'Transaction will be added to Block {index}'}
+            return HomePage()
     return 'You already voted', 400
 
     """
@@ -276,6 +314,13 @@ def full_chain():
     response = {
         'chain': blockchain.chain,
         'length': len(blockchain.chain),
+    }
+    return jsonify(response), 200
+
+@app.route('/transactions', methods=['GET'])
+def all_transactions():
+    response = {
+        'block': blockchain.current_transactions
     }
     return jsonify(response), 200
 
