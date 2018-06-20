@@ -239,8 +239,21 @@ def mine():
     return jsonify(response), 200
 
 
-@app.route('/vote', methods=['POST'])
+@app.route('/new_transaction', methods=['POST'])
 def new_transaction():
+
+    sender = request.form['sender']
+    recipient = request.form['recipient']
+    amount = 5
+
+    if not sender in voted:
+        index = blockchain.new_transaction(sender, recipient, amount)
+        voted.append(sender)
+        response = {'message': f'Transaction will be added to Block {index}'}
+        return jsonify(response), 201
+    return 'You already voted', 400
+
+    """
     values = request.get_json()
 
     # Check that the required fields are in the POST'ed data
@@ -255,6 +268,7 @@ def new_transaction():
         response = {'message': f'Transaction will be added to Block {index}'}
         return jsonify(response), 201
     return 'You already voted', 400
+    """
 
 
 @app.route('/chain', methods=['GET'])
@@ -326,6 +340,45 @@ def VoteCount():
         'donaldtrump': DT
     }
     return render_template('layout.html', title='Layout', votes=Results)
+
+@app.route('/home', methods=['GET'])
+def HomePage():
+    votes = []
+    global DT, MR
+
+    for block in blockchain.chain:
+        for tx in block["transactions"]:
+            rc = tx["recipient"]
+            sd = tx["sender"]
+            if not sd in votedforcount:
+                votes.append(rc)
+                votedforcount.append(sd)
+
+    for x in votes:
+        if x == "DonaldTrump":
+            DT += 1
+        if x == "MarkRutte":
+            MR += 1
+    print(votes)
+
+    #Candidates={
+     #   'mark': "Mark Rutte",
+      #  'donald': "Donald Trump"
+    #}
+    Candidates = []
+
+    item = dict(id=1, name="Mark Rutte", votes=MR)
+    item2 = dict(id=2, name="Donald Trump", votes=DT)
+
+    Candidates.append(item)
+    Candidates.append(item2)
+
+    return render_template('home.html', title='Home', candidates=Candidates)
+
+@app.route('/handle_data', methods=['POST'])
+def handle_data():
+    projectpath = request.form['projectFilepath']
+    print(projectpath)
 
 
 if __name__ == '__main__':

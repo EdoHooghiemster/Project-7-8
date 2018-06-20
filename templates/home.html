@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="col-md-8">
+                    <h1><center>Election Results</center></h1>
+
+                    <br>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">Name</th>
+                              <th scope="col">Votes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                {% for col in candidates %}
+                                    <tr>
+                                        <td>{{ col.id }}</td>
+                                        <td>{{ col.name }}</td>
+                                        <td>{{ col.votes }}</td>
+                                    </tr>
+                                {% endfor %}
+
+                        </tbody>
+                    </table>
+
+                    <hr>
+                    <br>
+                    <br>
+
+                    <form action="{{ url_for('new_transaction') }}" method="post">
+                        <p>Your Account number</p>
+                        <input style="width: 100%" type="text" name="sender">
+
+                        <br>
+                        <br>
+                        <p>Select Candidate</p>
+                        <div class="input-group">
+                            <select class="custom-select" name="recipient">
+                                <option selected>Choose...</option>
+                                <option value="MarkRutte">Mark Rutte</option>
+                                <option value="DonaldTrump">Donald Trump</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
