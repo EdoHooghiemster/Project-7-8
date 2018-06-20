@@ -7,6 +7,7 @@
         <div class="container">
             <div class="row justify-content-md-center">
                 <div class="col-md-8">
+                    <br>
                     <h1><center>Election Results</center></h1>
 
                     <br>
@@ -33,16 +34,12 @@
 
                     <hr>
                     <br>
-                    <br>
 
                     <form action="{{ url_for('new_transaction') }}" method="post">
                         <p>Your Account number</p>
                         <input style="width: 100%" type="text" name="sender">
                         <p>Your private key</p>
                         <input style="width: 100%" type="password" name="key">
-
-                        <br>
-                        <br>
                         <p>Select Candidate</p>
                         <div class="input-group">
                             <select class="custom-select" name="recipient">
@@ -55,11 +52,13 @@
                             </div>
                         </div>
                     </form>
-                <div class="row justify-content-md-center">
-                    <input type="button" class="btn btn-outline-secondary" value="Mine" onclick="window.location.href='http://localhost:5000/mine'" /> &ensp;
-                    <input type="button" class="btn btn-outline-secondary" value="Show Chain" onclick="window.location.href='http://localhost:5000/chain'" /> &ensp;
-                    <input type="button" class="btn btn-outline-secondary" value="Show current Transactions" onclick="window.location.href='http://localhost:5000/transactions'" />
+                    <br>
+                    <div class="row justify-content-md-center">
+                        <input type="button" class="btn btn-outline-secondary" value="Mine" onclick="window.location.href='http://localhost:5000/mine'" /> &ensp;
+                        <input type="button" class="btn btn-outline-secondary" value="Show Chain" onclick="window.location.href='http://localhost:5000/chain'" /> &ensp;
+                        <input type="button" class="btn btn-outline-secondary" value="Show current Transactions" onclick="window.location.href='http://localhost:5000/transactions'" />
                     </div>
+                    <hr>
                 </div>
             </div>
         </div>

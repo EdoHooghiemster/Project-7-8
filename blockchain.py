@@ -250,12 +250,6 @@ def HomePage():
 
     return render_template('home.html', title='Home', candidates=Candidates)
 
-@app.route('/handle_data', methods=['POST'])
-def handle_data():
-    projectpath = request.form['projectFilepath']
-    print(projectpath)
-
-
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
