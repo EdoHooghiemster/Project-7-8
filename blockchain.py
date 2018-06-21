@@ -198,6 +198,8 @@ def new_transaction():
             return "You are not in the system", 400
         else:
             voted.append(sender)
+            response = {'message': f'Transaction will be added to Block {index}'}
+            print(response)
             return HomePage()
     return 'You already voted', 400
 
