@@ -181,6 +181,14 @@ def mine():
     previous_hash = blockchain.hash(last_block)
     block = blockchain.new_block(proof, previous_hash)
     #laad homepage opnieuw om het nieuwe aantal stemmen weer te geven
+    response = {
+        'message': "New Block Forged",
+        'index': block['index'],
+        'transactions': block['transactions'],
+        'proof': block['proof'],
+        'previous_hash': block['previous_hash'],
+    }
+    print(response)
     return HomePage()
 
 
